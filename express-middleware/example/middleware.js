@@ -1,7 +1,7 @@
 var grpc = require('@grpc/grpc-js');
 var protoLoader = require('@grpc/proto-loader');
 
-var PROTO_PATH = './chat.proto';
+var PROTO_PATH = './logger.proto';
 
 var packageDefinition = protoLoader.loadSync(
     PROTO_PATH,
@@ -13,19 +13,19 @@ var packageDefinition = protoLoader.loadSync(
         oneofs: true
     });
 
-var chat = grpc.loadPackageDefinition(packageDefinition).chat;
+var logger = grpc.loadPackageDefinition(packageDefinition).logger;
 
 var target = 'localhost:9000'
 
 
-const logger = (req, res, next) => {
+const loggerMiddleware = (req, _, next) => {
     try {
         console.log(req.body);
-        var client = new chat.ChatService(target,
+        var client = new logger.LogService(target,
             grpc.credentials.createInsecure());
 
-        client.SayHello({body : 'hi'}, function (err, response) {
-            console.log('Greeting:', response);
+        client.LogRequest({body : 'hi'}, function (err, _) {
+            if (err) throw err;
         });
     } catch (err) {
         console.log(err);
@@ -35,4 +35,4 @@ const logger = (req, res, next) => {
 }
 
 
-module.exports = logger;
+module.exports = loggerMiddleware;
