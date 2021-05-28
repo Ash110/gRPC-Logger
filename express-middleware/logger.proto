@@ -1,0 +1,15 @@
+syntax = "proto3";
+package logger;
+
+message Log {
+  string body = 1;
+}
+
+message Response {
+  
+}
+
+service LogService {
+  rpc LogRequest(Log) returns (Response) {}
+}
+option go_package = "./";
