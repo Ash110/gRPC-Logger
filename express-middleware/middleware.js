@@ -24,11 +24,11 @@ const loggerMiddleware = (req, _, next) => {
         const ip_address = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         const log = {
             timeOfLog : new Date().toISOString(),
+            remoteAddress : ip_address,
             method,
             url,
             httpVersion,
             headers,
-            remoteAddress : ip_address
         }
         var client = new logger.LogService(target,
             grpc.credentials.createInsecure());
