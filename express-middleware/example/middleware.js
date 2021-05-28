@@ -20,11 +20,20 @@ var target = 'localhost:9000'
 
 const loggerMiddleware = (req, _, next) => {
     try {
-        console.log(req.body);
+        const { method, url, httpVersion, headers } = req;
+        const ip_address = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        const log = {
+            timeOfLog : new Date().toISOString(),
+            method,
+            url,
+            httpVersion,
+            headers,
+            remoteAddress : ip_address
+        }
         var client = new logger.LogService(target,
             grpc.credentials.createInsecure());
 
-        client.LogRequest({body : 'hi'}, function (err, _) {
+        client.LogRequest({ body: JSON.stringify(log) }, function (err, _) {
             if (err) throw err;
         });
     } catch (err) {

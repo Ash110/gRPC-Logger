@@ -1,7 +1,6 @@
 package __
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -18,12 +17,13 @@ func (s *Server) LogRequest(ctx context.Context, in *Log) (*Response, error) {
 }
 
 func writeLog(s string) {
-	file, err := os.OpenFile("requests.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	file, err := os.OpenFile("requests_log.ndjson", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	log.SetFlags(0)
 	log.SetOutput(file)
 
-	log.Printf("%s | %s", fmt.Sprint(log.Ldate), s)
+	log.Printf("%s", s)
 }
